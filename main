@@ -1,68 +1,67 @@
+
 local HttpService = game:GetService("HttpService")
 
 local API = "https://keys.j2trapz67.workers.dev/"
 
-local ScriptURL = "https://raw.githubusercontent.com/x1617018-cmyk/poop/refs/heads/main/poopy"
 
--- Put the user's key here
+local Key = getgenv().ScriptKey
 
 
-local function VerifyKey()
+if not Key then
+    warn("No key provided")
+    return
+end
 
-    local success, response = pcall(function()
 
-        return request({
-            Url = API,
-            Method = "POST",
-            Headers = {
-                ["Content-Type"] = "application/json"
-            },
-            Body = HttpService:JSONEncode({
-                action = "verify",
-                key = Key
-            })
+
+local success, response = pcall(function()
+
+    return request({
+
+        Url = API,
+
+        Method = "POST",
+
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+
+        Body = HttpService:JSONEncode({
+
+            action = "verify",
+
+            key = Key
+
         })
 
-    end)
+    })
+
+end)
 
 
-    if not success then
-        warn("API connection failed")
-        return false
-    end
 
+if not success then
 
-    local data = HttpService:JSONDecode(response.Body)
+    warn("Failed connecting to key server")
+    return
 
-    return data.success == true
 end
 
 
 
-if VerifyKey() then
-
-    print("Key valid - loading script")
-
-    local success, code = pcall(function()
-
-        return game:HttpGet(ScriptURL)
-
-    end)
+local data = HttpService:JSONDecode(response.Body)
 
 
-    if success then
 
-        loadstring(code)()
-
-    else
-
-        warn("Failed loading script")
-
-    end
-
-
-else
+if not data.success then
 
     warn("Invalid key")
+    return
 
 end
+
+
+
+print("✅ Key verified")
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/x1617018-cmyk/poop/refs/heads/main/poopy"))()
