@@ -1,15 +1,42 @@
-
 local HttpService = game:GetService("HttpService")
+local StarterGui = game:GetService("StarterGui")
 
 local API = "https://keys.j2trapz67.workers.dev/"
+
+
+local function Notify(title, text)
+
+    pcall(function()
+
+        StarterGui:SetCore(
+            "SendNotification",
+            {
+                Title = title,
+                Text = text,
+                Duration = 5
+            }
+        )
+
+    end)
+
+end
+
 
 
 local Key = getgenv().ScriptKey
 
 
 if not Key then
+
+    Notify(
+        "Axiom Key System",
+        "❌ No key provided"
+    )
+
     warn("No key provided")
+
     return
+
 end
 
 
@@ -42,7 +69,13 @@ end)
 
 if not success then
 
+    Notify(
+        "Axiom Key System",
+        "❌ Failed connecting to server"
+    )
+
     warn("Failed connecting to key server")
+
     return
 
 end
@@ -55,13 +88,32 @@ local data = HttpService:JSONDecode(response.Body)
 
 if not data.success then
 
+    Notify(
+        "Axiom Key System",
+        "❌ Invalid or expired key"
+    )
+
     warn("Invalid key")
+
     return
 
 end
 
 
 
+Notify(
+    "Axiom Key System",
+    "✅ Key verified! Loading..."
+)
+
+
 print("✅ Key verified")
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/x1617018-cmyk/poop/refs/heads/main/poopy"))()
+
+
+task.wait(1)
+
+
+loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/x1617018-cmyk/poop/refs/heads/main/poopy"
+))()
