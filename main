@@ -20,7 +20,7 @@ local API = "https://keys.j2trapz67.workers.dev/"
 
 local Games = {
 
-    [379614936] = "https://raw.githubusercontent.com/USERNAME/REPO/main/game1.lua",
+    [379614936] = "https://raw.githubusercontent.com/x1617018-cmyk/poop/refs/heads/main/poopy",
 
     [123456789] = "https://raw.githubusercontent.com/USERNAME/REPO/main/game2.lua",
 
