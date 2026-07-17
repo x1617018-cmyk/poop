@@ -1,165 +1,68 @@
 local HttpService = game:GetService("HttpService")
 
-
-
-
--- =========================
--- CLOUD API
--- =========================
-
 local API = "https://keys.j2trapz67.workers.dev/"
 
+local ScriptURL = "https://raw.githubusercontent.com/x1617018-cmyk/poop/refs/heads/main/poopy"
+
+-- Put the user's key here
 
 
--- =========================
--- GAME SCRIPT LIST
--- =========================
--- Add games here:
--- [PlaceId] = Script URL
-
-
-local Games = {
-
-    [379614936] = "https://raw.githubusercontent.com/x1617018-cmyk/poop/refs/heads/main/poopy",
-
-    [123456789] = "https://raw.githubusercontent.com/USERNAME/REPO/main/game2.lua",
-
-    [987654321] = "https://raw.githubusercontent.com/USERNAME/REPO/main/game3.lua"
-
-}
-
-
-
--- =========================
--- CHECK GAME
--- =========================
-
-local ScriptURL = Games[game.PlaceId]
-
-
-if not ScriptURL then
-
-    warn("Game not supported")
-
-    return
-
-end
-
-
-
-print("Game detected:", game.PlaceId)
-
-
-
--- =========================
--- VERIFY KEY
--- =========================
-
-local function CheckKey()
-
+local function VerifyKey()
 
     local success, response = pcall(function()
 
-
         return request({
-
             Url = API,
-
             Method = "POST",
-
             Headers = {
-
                 ["Content-Type"] = "application/json"
-
             },
-
             Body = HttpService:JSONEncode({
-
                 action = "verify",
-
                 key = Key
-
             })
-
         })
-
 
     end)
 
 
-
     if not success then
-
-        warn("Could not connect to key server")
-
+        warn("API connection failed")
         return false
-
     end
 
 
+    local data = HttpService:JSONDecode(response.Body)
 
-    local data = HttpService:JSONDecode(
-        response.Body
-    )
-
-
-
-    if data.success then
-
-        return true
-
-    end
-
-
-    return false
-
+    return data.success == true
 end
 
 
 
+if VerifyKey() then
 
-
--- =========================
--- LOAD SCRIPT
--- =========================
-
-
-if CheckKey() then
-
-
-    print("Key valid")
-
+    print("Key valid - loading script")
 
     local success, code = pcall(function()
 
-        return game:HttpGet(
-            ScriptURL
-        )
+        return game:HttpGet(ScriptURL)
 
     end)
-
 
 
     if success then
 
-
         loadstring(code)()
-
 
     else
 
-
-        warn("Failed downloading script")
-
+        warn("Failed loading script")
 
     end
 
 
-
 else
 
-
-    warn("Invalid or expired key")
-
+    warn("Invalid key")
 
 end
