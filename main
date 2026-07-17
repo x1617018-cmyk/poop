@@ -1,0 +1,165 @@
+local HttpService = game:GetService("HttpService")
+
+
+
+
+-- =========================
+-- CLOUD API
+-- =========================
+
+local API = "https://keys.j2trapz67.workers.dev/"
+
+
+
+-- =========================
+-- GAME SCRIPT LIST
+-- =========================
+-- Add games here:
+-- [PlaceId] = Script URL
+
+
+local Games = {
+
+    [379614936] = "https://raw.githubusercontent.com/USERNAME/REPO/main/game1.lua",
+
+    [123456789] = "https://raw.githubusercontent.com/USERNAME/REPO/main/game2.lua",
+
+    [987654321] = "https://raw.githubusercontent.com/USERNAME/REPO/main/game3.lua"
+
+}
+
+
+
+-- =========================
+-- CHECK GAME
+-- =========================
+
+local ScriptURL = Games[game.PlaceId]
+
+
+if not ScriptURL then
+
+    warn("Game not supported")
+
+    return
+
+end
+
+
+
+print("Game detected:", game.PlaceId)
+
+
+
+-- =========================
+-- VERIFY KEY
+-- =========================
+
+local function CheckKey()
+
+
+    local success, response = pcall(function()
+
+
+        return request({
+
+            Url = API,
+
+            Method = "POST",
+
+            Headers = {
+
+                ["Content-Type"] = "application/json"
+
+            },
+
+            Body = HttpService:JSONEncode({
+
+                action = "verify",
+
+                key = Key
+
+            })
+
+        })
+
+
+    end)
+
+
+
+    if not success then
+
+        warn("Could not connect to key server")
+
+        return false
+
+    end
+
+
+
+    local data = HttpService:JSONDecode(
+        response.Body
+    )
+
+
+
+    if data.success then
+
+        return true
+
+    end
+
+
+    return false
+
+end
+
+
+
+
+
+-- =========================
+-- LOAD SCRIPT
+-- =========================
+
+
+if CheckKey() then
+
+
+    print("Key valid")
+
+
+    local success, code = pcall(function()
+
+        return game:HttpGet(
+            ScriptURL
+        )
+
+    end)
+
+
+
+    if success then
+
+
+        loadstring(code)()
+
+
+    else
+
+
+        warn("Failed downloading script")
+
+
+    end
+
+
+
+else
+
+
+    warn("Invalid or expired key")
+
+
+end
