@@ -1,0 +1,42 @@
+local lib = loadstring(game:HttpGet"https://raw.githubusercontent.com/dawid-scripts/UI-Libs/main/Vape.txt")()
+local win = lib:Window("Dev-Hub", Color3.fromRGB(255, 100, 100), Enum.KeyCode.RightControl)
+
+-- Main Tab
+local mainTab = win:Tab("AutoKill")
+
+mainTab:Button("Revamp AutoKill", function()
+
+end)
+
+mainTab:Toggle("Loop Revamp AutoKill", function(state)
+    looping = state
+    while looping do
+        task.wait()
+        print("Looping")
+    end
+end)
+
+
+mainTab:Button("Force Equip Knife", function()
+
+end)
+
+mainTab:Button("Teleport to Target", function()
+
+end)
+
+-- Settings Tab
+local settingsTab = win:Tab("Settings")
+
+settingsTab:Colorpicker("UI Color", Color3.fromRGB(255, 100, 100), function(color)
+    lib:ChangePresetColor(color)
+end)
+
+settingsTab:Toggle("Notifications", function(state)
+    -- Toggle notifications (would need to modify notify function)
+    notify("Notifications", "Toggled " .. (state and "ON" or "OFF"), "info")
+end)
+
+settingsTab:Button("Destroy Script", function()
+    lib:Destroy()
+end)
